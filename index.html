@@ -1,35 +1,146 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="taskApp">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Manager</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="styles.css">
+  <title>Test de Connaissance par VTC</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- FontAwesome for icons -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js for charts -->
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .top-bar {
+      background-color: #4267B2; /* Couleur de la barre supérieure */
+      color: white;
+      padding: 15px;
+    }
+    .container {
+      margin-top: 20px;
+    }
+    .card {
+      margin-bottom: 20px;
+      border: 2px solid #dee2e6;
+      border-radius: 10px;
+    }
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .card-body {
+      padding: 20px;
+    }
+  </style>
 </head>
-<body ng-controller="TaskController as taskCtrl">
-  <div class="container">
-    <h1 class="text-center">Task Manager</h1>
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Add new task" ng-model="taskCtrl.newTask">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="button" ng-click="taskCtrl.addTask()">Add Task</button>
+<body>
+
+<div class="top-bar">
+  <h1 class="text-center">Test de Connaissance par VTC</h1>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">Performance de la Semaine</h4>
+        </div>
+        <div class="card-body">
+          <canvas id="performanceChart" width="400" height="400"></canvas>
+          <a href="#" class="btn btn-primary">Voir plus</a>
+        </div>
       </div>
     </div>
-    <ul class="list-group">
-      <li class="list-group-item" ng-repeat="task in taskCtrl.tasks">
-        <span>{{task.name}}</span>
-        <div class="btn-group float-right" role="group" aria-label="Task Actions">
-          <button class="btn btn-success btn-sm" ng-click="taskCtrl.toggleCompleted(task)">
-            <span ng-if="!task.completed">Complete</span>
-            <span ng-if="task.completed">Undo</span>
-          </button>
-          <button class="btn btn-danger btn-sm" ng-click="taskCtrl.removeTask(task)">Remove</button>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">Activités Récentes</h4>
         </div>
-      </li>
-    </ul>
+        <div class="card-body">
+          <canvas id="activityChart" width="400" height="400"></canvas>
+          <a href="#" class="btn btn-primary">Voir plus</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">Résumé Mensuel</h4>
+        </div>
+        <div class="card-body">
+          <canvas id="summaryChart" width="400" height="400"></canvas>
+          <a href="#" class="btn btn-primary">Voir plus</a>
+        </div>
+      </div>
+    </div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
-  <script src="app.js"></script>
+</div>
+
+<script>
+  // Données factices pour les graphiques
+  var performanceData = {
+    labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven'],
+    datasets: [{
+      label: 'Taux de réussite (%)',
+      data: [80, 85, 90, 85, 88],
+      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1
+    }]
+  };
+
+  var activityData = {
+    labels: ['Nouveaux tests', 'Résultats des tests'],
+    datasets: [{
+      label: 'Activités récentes',
+      data: [20, 35],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  var summaryData = {
+    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+    datasets: [{
+      label: 'Nouveaux inscrits',
+      data: [50, 60, 70, 65, 80, 75],
+      backgroundColor: 'rgba(255, 206, 86, 0.2)',
+      borderColor: 'rgba(255, 206, 86, 1)',
+      borderWidth: 1
+    }]
+  };
+
+  // Créer les graphiques
+  var ctx1 = document.getElementById('performanceChart').getContext('2d');
+  var ctx2 = document.getElementById('activityChart').getContext('2d');
+  var ctx3 = document.getElementById('summaryChart').getContext('2d');
+
+  var performanceChart = new Chart(ctx1, {
+    type: 'line',
+    data: performanceData
+  });
+
+  var activityChart = new Chart(ctx2, {
+    type: 'bar',
+    data: activityData
+  });
+
+  var summaryChart = new Chart(ctx3, {
+    type: 'line',
+    data: summaryData
+  });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
